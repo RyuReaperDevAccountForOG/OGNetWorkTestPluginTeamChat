@@ -46,4 +46,8 @@ If the plugin fails to load, ensure that all dependencies are correctly installe
 Check your Redis server status. Make sure it's running and accessible.
 Review the server logs for any error messages related to the plugin.
 
-
+```
+MAKE SURE YOU CONFIGURE YOUR REDISH IN THE config.yml
+Best Regards 
+-  Ryu Reaper
+```
