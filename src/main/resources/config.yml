@@ -1,0 +1,4 @@
+redis:
+  host: "" # bruh just replace with your actual host of server
+  port: 6379
+  password: "" # set pass if there is one

@@ -1,0 +1,10 @@
+name: TestOgNetWorkPlugin
+main: com.ognetwork.teamchat.TestOgNetWorkPlugin
+version: 3.0
+commands:
+  team:
+    description: Manages teams (create, join, leave)
+    usage: /team <create|join|leave> [team_name]
+  teamchat:
+    description: Sends a message to your team's chat
+    usage: /teamchat <message>
