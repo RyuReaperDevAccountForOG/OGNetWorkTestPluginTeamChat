@@ -1,28 +1,41 @@
-package com.ognetwork.teamchat.managers;
+package com.ryureaper.teamchat.managers;
 
-import com.ognetwork.teamchat.TestOgNetWorkPlugin;
+import com.ryureaper.teamchat.TeamChatPlugin;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPubSub;
 
 public class RedisManager {
 
-    private JedisPool jedisPool;
+    private Jedis jedis;
+    private TeamChatPlugin plugin;
 
-    public RedisManager(TestOgNetWorkPlugin plugin) {
-        String redisHost = plugin.getConfig().getString("redis.host");
-        int redisPort = plugin.getConfig().getInt("redis.port");
-        String redisPassword = plugin.getConfig().getString("redis.password");
+    public RedisManager(TeamChatPlugin plugin) {
+        this.plugin = plugin;
+        jedis = new Jedis(plugin.getConfig().getString("redis.host"), plugin.getConfig().getInt("redis.port"));
 
-        this.jedisPool = new JedisPool(redisHost, redisPort);
+        // Subscribe to all team channels
+        new Thread(() -> {
+            jedis.subscribe(new JedisPubSub() {
+                @Override
+                public void onMessage(String channel, String message) {
+                    String[] parts = message.split(": ", 2);
+                    String playerName = parts[0];
+                    String msg = parts[1];
+                    plugin.getServer().getOnlinePlayers().forEach(player -> {
+                        if (plugin.getTeamManager().getPlayerTeam(player.getUniqueId()).equals(channel.split(":")[1])) {
+                            player.sendMessage("[" + playerName + "]: " + msg);
+                        }
+                    });
+                }
+            }, "team:*");
+        }).start();
     }
 
-    public void sendMessage(String channel, String message) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.publish(channel, message);
-        }
+    public void publishTeamMessage(String teamName, String playerName, String message) {
+        jedis.publish("team:" + teamName, playerName + ": " + message);
     }
 
     public void close() {
-        jedisPool.close();
+        jedis.close();
     }
 }

@@ -1,4 +1,16 @@
+# Configuration for Team Chat Plugin
 redis:
-  host: "" # bruh just replace with your actual host of server
-  port: 6379
-  password: "" # set pass if there is one
+  host: localhost       # Redis server host set it accordingly
+  port: 6379            # Redis server port set it please 
+  password: ""          # Optional Redis password if got set it
+  channels:
+    teamChat: "team_chat_channel"   # Redis channel for team chat messages
+
+teams:
+  max-size: 5           # Maximum number of players in a team
+  allow-create: true    # Allow players to create new teams
+  default-prefix: "[Team]"  # Default prefix for team chat messages
+  default-color: "&b"   # Default color for team chat messages
+
+plugin-settings:
+  log-level: "INFO"     # Logging level (INFO, DEBUG, ERROR)

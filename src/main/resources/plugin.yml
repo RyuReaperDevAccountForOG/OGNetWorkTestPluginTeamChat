@@ -1,10 +1,25 @@
-name: TestOgNetWorkPlugin
-main: com.ognetwork.teamchat.TestOgNetWorkPlugin
-version: 3.0
+name: TeamChatPlugin
+main: com.ryureaper.teamchat.TeamChatPlugin
+version: 1.0
+api-version: 1.21
+author: Ryu Reaper
+description: >
+  A plugin that enables players to form teams and communicate in a custom team chat channel
+  across multiple servers using Redis for real-time communication.
+
 commands:
-  team:
-    description: Manages teams (create, join, leave)
-    usage: /team <create|join|leave> [team_name]
   teamchat:
-    description: Sends a message to your team's chat
+    description: Use this command to chat with your team.
     usage: /teamchat <message>
+    aliases: [tc]
+  team:
+    description: Team management commands
+    usage: /team <create|join|leave|list>
+
+permissions:
+  teamchat.use:
+    description: Allows players to use team chat.
+    default: true
+  team.manage:
+    description: Allows players to manage teams (create/join/leave).
+    default: true

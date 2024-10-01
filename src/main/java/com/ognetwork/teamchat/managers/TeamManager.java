@@ -1,34 +1,44 @@
-package com.ognetwork.teamchat.managers;
+package com.ryureaper.teamchat.managers;
 
+import com.ryureaper.teamchat.models.Team;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 public class TeamManager {
 
-    private Map<String, String> playerTeams = new HashMap<>();
+    private HashMap<String, Team> teams = new HashMap<>();
+    private HashMap<UUID, String> playerTeams = new HashMap<>();
 
-    public void createTeam(Player player, String teamName) {
-        playerTeams.put(player.getName(), teamName);
-        player.sendMessage("Team " + teamName + " created and you have joined.");
-    }
-
-    public void joinTeam(Player player, String teamName) {
-        playerTeams.put(player.getName(), teamName);
-        player.sendMessage("You have joined team " + teamName + ".");
-    }
-
-    public void leaveTeam(Player player) {
-        if (playerTeams.containsKey(player.getName())) {
-            playerTeams.remove(player.getName());
-            player.sendMessage("You have left your team.");
-        } else {
-            player.sendMessage("You are not in any team.");
+    public boolean createTeam(Player player, String teamName) {
+        if (teams.containsKey(teamName)) {
+            return false; // Team already exists
         }
+        teams.put(teamName, new Team(teamName));
+        playerTeams.put(player.getUniqueId(), teamName);
+        return true;
     }
 
-    public String getPlayerTeam(Player player) {
-        return playerTeams.get(player.getName());
+    public boolean joinTeam(Player player, String teamName) {
+        if (!teams.containsKey(teamName)) {
+            return false; // Team does not exist
+        }
+        playerTeams.put(player.getUniqueId(), teamName);
+        teams.get(teamName).addMember(player.getName());
+        return true;
+    }
+
+    public boolean leaveTeam(Player player) {
+        String teamName = playerTeams.remove(player.getUniqueId());
+        if (teamName == null) {
+            return false; // Player is not in any team
+        }
+        teams.get(teamName).removeMember(player.getName());
+        return true;
+    }
+
+    public String getPlayerTeam(UUID playerId) {
+        return playerTeams.get(playerId);
     }
 }

@@ -1,7 +1,6 @@
-package com.ognetwork.teamchat.commands;
+package com.ryureaper.teamchat.commands;
 
-import com.ognetwork.teamchat.TestOgNetWorkPlugin;
-import com.ognetwork.teamchat.managers.TeamManager;
+import com.ryureaper.teamchat.managers.TeamManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,52 +8,66 @@ import org.bukkit.entity.Player;
 
 public class TeamCommand implements CommandExecutor {
 
-    private TestOgNetWorkPlugin plugin;
+    private TeamManager teamManager;
 
-    public TeamCommand(TestOgNetWorkPlugin plugin) {
-        this.plugin = plugin;
+    public TeamCommand(TeamManager teamManager) {
+        this.teamManager = teamManager;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("This command can only be run by players.");
+            sender.sendMessage("Only players can manage teams.");
             return true;
         }
 
         Player player = (Player) sender;
-        TeamManager teamManager = plugin.getTeamManager();
 
         if (args.length < 1) {
-            player.sendMessage("Usage: /team <create|join|leave> [team_name]");
+            player.sendMessage("Usage: /team <create|join|leave> [teamName]");
             return true;
         }
 
-        String subCommand = args[0];
+        String subCommand = args[0].toLowerCase();
 
-        switch (subCommand.toLowerCase()) {
+        switch (subCommand) {
             case "create":
                 if (args.length < 2) {
-                    player.sendMessage("Usage: /team create <team_name>");
+                    player.sendMessage("Please specify a team name.");
                     return true;
                 }
-                teamManager.createTeam(player, args[1]);
+                String teamName = args[1];
+                if (teamManager.createTeam(player, teamName)) {
+                    player.sendMessage("Team " + teamName + " created successfully.");
+                } else {
+                    player.sendMessage("Failed to create team (maybe it already exists).");
+                }
                 break;
 
             case "join":
                 if (args.length < 2) {
-                    player.sendMessage("Usage: /team join <team_name>");
+                    player.sendMessage("Please specify a team to join.");
                     return true;
                 }
-                teamManager.joinTeam(player, args[1]);
+                teamName = args[1];
+                if (teamManager.joinTeam(player, teamName)) {
+                    player.sendMessage("You have joined the team " + teamName + ".");
+                } else {
+                    player.sendMessage("Failed to join the team.");
+                }
                 break;
 
             case "leave":
-                teamManager.leaveTeam(player);
+                if (teamManager.leaveTeam(player)) {
+                    player.sendMessage("You have left your team.");
+                } else {
+                    player.sendMessage("You are not part of any team.");
+                }
                 break;
 
             default:
-                player.sendMessage("Unknown sub-command.");
+                player.sendMessage("Unknown command. Usage: /team <create|join|leave> [teamName]");
+                break;
         }
 
         return true;
