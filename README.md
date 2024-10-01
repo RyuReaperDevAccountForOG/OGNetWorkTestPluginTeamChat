@@ -13,6 +13,7 @@ This plugin allows players to form teams and communicate via a custom chat chann
 - Simple team management (create, join, leave teams).
 - Optimized for low-latency communication across high player volumes.
 - Supports Minecraft 1.21.1 API.
+- Configurable Redis Setup via ingame.
 
 ---
 
@@ -65,14 +66,8 @@ Start or restart your Minecraft server to load the plugin.
 #### `config.yml`
 
 ```yaml
-redis:
-  host: localhost
-  port: 6379
-  password: your_redis_password (if applicable)
-  channel: team_chat_channel
+/redish <host> <port> <pass>
 ```
-
-Modify `config.yml` with your Redis server details and channel name for inter-server communication.
 
 ---
 
@@ -82,6 +77,7 @@ Modify `config.yml` with your Redis server details and channel name for inter-se
 - `/team join <name>` - Join an existing team.
 - `/team leave` - Leave your current team.
 - `/team list` - List all teams.
+- `/redis <host> <port> <pass>` - Configure Redis server
 
 ---
 
