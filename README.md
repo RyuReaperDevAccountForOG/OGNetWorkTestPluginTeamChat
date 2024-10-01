@@ -1,53 +1,104 @@
-# OGNetwork Test Plugin
+## Team Chat Plugin
 
-## Overview
-This is a test plugin for developers working on the OGNetwork Minecraft server, built using the Spigot API. This plugin integrates with Redis to enable real-time communication across multiple servers.
+### Overview
+This plugin allows players to form teams and communicate via a custom chat channel across multiple Minecraft servers using Redis for real-time communication. The plugin is built using Java and Spigot, with Redis facilitating cross-server messaging. It also includes commands to manage teams (create, join, leave, list) and communicate efficiently in team chat.
 
-## Prerequisites
-Before building the plugin, ensure you have the following installed:
+> **Watermark:** Created and Maintained by **RyuReaper**
 
-- **Java JDK 17** or higher
-- **Apache Maven**
-- **Redis** (for the Redis setup)
-- **Git** (to clone the repository)
+---
 
-## Cloning the Repository
-First, clone the repository to your local machine:
+### Features:
+- Team-based chat system.
+- Cross-server chat communication via Redis.
+- Simple team management (create, join, leave teams).
+- Optimized for low-latency communication across high player volumes.
+- Supports Minecraft 1.21.1 API.
 
+---
+
+### Prerequisites
+
+Before building and deploying this plugin, ensure the following software is installed on your machine:
+
+- **Java Development Kit (JDK) 17+** – Required to compile the plugin.
+- **Apache Maven** – To handle dependencies and build the plugin.
+- **Spigot 1.21.1** – Minecraft server API for plugin development.
+- **Redis** – To handle real-time inter-server communication.
+- **Git** – For source control.
+
+---
+
+### Installation
+
+#### 1. Clone the Repository
+
+First, clone this repository to your local environment:
 ```bash
-git clone https://github.com/yourusername/OGNetWorkTestPlugin.git
-cd OGNetWorkTestPlugin
+git clone https://github.com/RyuReaperDevAccountForOG/OGNetWorkTestPluginTeamChat.git
+cd OGNetWorkTestPluginTeamChat
 ```
-Building the Plugin
-Navigate to the Project Directory: Open a terminal and navigate to the directory where you cloned the project.
 
-Install Dependencies: Run the following command to install the required dependencies:
-```
-mvn clean install
-```
-This command compiles the plugin and downloads any dependencies defined in the pom.xml file.
-Locate the Plugin JAR: After a successful build, the compiled JAR file will be located in the target directory.
-Setting Up Redis
-Install Redis: If you don't have Redis installed, you can follow the installation guide from the official Redis website.
+#### 2. Build the Plugin
 
-Start Redis Server: Once installed, start your Redis server. Typically, you can do this by running:
+To compile and build the plugin JAR file, run Maven:
+```bash
+mvn clean package
 ```
-redish-server
-```
-Configure Your Plugin: Before using the plugin, ensure that your Redis configuration matches your server setup. You may need to specify the Redis host and port in the plugin's configuration files.
-Running the Plugin
-Copy the JAR File: Move the generated JAR file from the target directory to your Minecraft server's plugins folder.
+This command compiles the source code, resolves dependencies, and packages the plugin into `target/TeamChatPlugin.jar`.
 
-Start Your Minecraft Server: Launch your Minecraft server. The plugin should load automatically if placed correctly in the plugins folder.
+#### 3. Set Up Redis
 
-Check for Errors: Monitor the console for any errors or logs that indicate whether the plugin has started correctly.
-Troubleshooting
-If the plugin fails to load, ensure that all dependencies are correctly installed and configured.
-Check your Redis server status. Make sure it's running and accessible.
-Review the server logs for any error messages related to the plugin.
+Ensure Redis is installed and running on your server(s). Configure Redis connection details in `config.yml`.
 
+#### 4. Deploy the Plugin
+
+Copy `target/TeamChatPlugin.jar` to your Spigot server's `plugins/` directory.
+
+#### 5. Start Your Minecraft Server
+
+Start or restart your Minecraft server to load the plugin.
+
+---
+
+### Configuration
+
+#### `config.yml`
+
+```yaml
+redis:
+  host: localhost
+  port: 6379
+  password: your_redis_password (if applicable)
+  channel: team_chat_channel
 ```
-MAKE SURE YOU CONFIGURE YOUR REDISH IN THE config.yml
-Best Regards 
--  Ryu Reaper
-```
+
+Modify `config.yml` with your Redis server details and channel name for inter-server communication.
+
+---
+
+### Commands
+
+- `/team create <name>` - Create a new team.
+- `/team join <name>` - Join an existing team.
+- `/team leave` - Leave your current team.
+- `/team list` - List all teams.
+
+---
+
+### GitHub Actions
+
+This repository includes GitHub Actions (`build.yml`) for automated testing and building on push and pull request events.
+
+---
+
+### Issues and Support
+
+For issues and support, please open an issue on [GitHub Issues](https://github.com/RyuReaperDevAccountForOG/OGNetWorkTestPluginTeamChat/issues).
+
+---
+
+### License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+---
