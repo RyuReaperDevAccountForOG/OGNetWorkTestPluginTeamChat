@@ -1,24 +1,13 @@
-package com.ryureaper.teamchat.utils;
+package com.ognetwork.teamchat.utils;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Bukkit;
 
 public class Logger {
-
-    private JavaPlugin plugin;
-
-    public Logger(JavaPlugin plugin) {
-        this.plugin = plugin;
+    public static void info(String message) {
+        Bukkit.getLogger().info("[TeamChat] " + message);
     }
 
-    public void info(String message) {
-        plugin.getLogger().info(message);
-    }
-
-    public void warn(String message) {
-        plugin.getLogger().warning(message);
-    }
-
-    public void error(String message) {
-        plugin.getLogger().severe(message);
+    public static void error(String message) {
+        Bukkit.getLogger().severe("[TeamChat] " + message);
     }
 }

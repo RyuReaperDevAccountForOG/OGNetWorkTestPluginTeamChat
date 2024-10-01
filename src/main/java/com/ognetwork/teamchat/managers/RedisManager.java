@@ -1,41 +1,41 @@
-package com.ryureaper.teamchat.managers;
+package com.ognetwork.teamchat.managers;
 
-import com.ryureaper.teamchat.TeamChatPlugin;
+import com.ognetwork.teamchat.TestOgNetWorkPlugin;
+import com.ognetwork.teamchat.utils.Logger;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPubSub;
 
 public class RedisManager {
 
     private Jedis jedis;
-    private TeamChatPlugin plugin;
 
-    public RedisManager(TeamChatPlugin plugin) {
-        this.plugin = plugin;
-        jedis = new Jedis(plugin.getConfig().getString("redis.host"), plugin.getConfig().getInt("redis.port"));
-
-        // Subscribe to all team channels
-        new Thread(() -> {
-            jedis.subscribe(new JedisPubSub() {
-                @Override
-                public void onMessage(String channel, String message) {
-                    String[] parts = message.split(": ", 2);
-                    String playerName = parts[0];
-                    String msg = parts[1];
-                    plugin.getServer().getOnlinePlayers().forEach(player -> {
-                        if (plugin.getTeamManager().getPlayerTeam(player.getUniqueId()).equals(channel.split(":")[1])) {
-                            player.sendMessage("[" + playerName + "]: " + msg);
-                        }
-                    });
-                }
-            }, "team:*");
-        }).start();
+    public RedisManager() {
+        setupRedisConnection();
     }
 
-    public void publishTeamMessage(String teamName, String playerName, String message) {
-        jedis.publish("team:" + teamName, playerName + ": " + message);
+    public void setupRedisConnection() {
+        try {
+            String host = TestOgNetWorkPlugin.getInstance().getConfig().getString("redis.host");
+            int port = TestOgNetWorkPlugin.getInstance().getConfig().getInt("redis.port");
+            String password = TestOgNetWorkPlugin.getInstance().getConfig().getString("redis.password");
+
+            jedis = new Jedis(host, port);
+            jedis.auth(password);
+            Logger.info("Connected to Redis.");
+        } catch (Exception e) {
+            Logger.error("Failed to connect to Redis: " + e.getMessage());
+        }
     }
 
-    public void close() {
-        jedis.close();
+    public void sendMessageToRedis(String message) {
+        if (jedis != null) {
+            jedis.publish("teamchat", message);
+        }
+    }
+
+    public void closeConnection() {
+        if (jedis != null) {
+            jedis.close();
+            Logger.info("Redis connection closed.");
+        }
     }
 }

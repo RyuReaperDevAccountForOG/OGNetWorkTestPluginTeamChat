@@ -1,31 +1,32 @@
-package com.ryureaper.teamchat.models;
+package com.ognetwork.teamchat.models;
+
+import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class Team {
-
-    private String name;
-    private Set<String> members;
+    private final String name;
+    private final Set<Player> players;
 
     public Team(String name) {
         this.name = name;
-        this.members = new HashSet<>();
+        this.players = new HashSet<>();
     }
 
     public String getName() {
         return name;
     }
 
-    public Set<String> getMembers() {
-        return members;
+    public void addPlayer(Player player) {
+        players.add(player);
     }
 
-    public void addMember(String playerName) {
-        members.add(playerName);
+    public void removePlayer(Player player) {
+        players.remove(player);
     }
 
-    public void removeMember(String playerName) {
-        members.remove(playerName);
+    public Set<Player> getPlayers() {
+        return players;
     }
 }
